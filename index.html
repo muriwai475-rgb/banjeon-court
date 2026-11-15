@@ -181,6 +181,8 @@ const LANG=(()=>{
 })();
 const EN={EV:{},SC:{},CE:{},WRONG:null,WRONG_CHOOSE:null};
 
+/* 받침에 따라 을/를 고르기: 을를('정전 기록') → '을' */
+function 을를(w){ const m=String(w).replace(/[^가-힣0-9A-Za-z]+$/,''); const c=m.charCodeAt(m.length-1); if(c>=0xAC00&&c<=0xD7A3) return (c-0xAC00)%28?'을':'를'; return /[013678LMNR]$/i.test(m)?'을':'를'; }
 const UI={
  ko:{
   docTitle:'반전법정: 푸른 고래 사건 파일',
@@ -190,8 +192,8 @@ const UI={
   music:'🎵 음악', musicOff:'🔇 음악', sfxTitle:'효과음 켜기/끄기',
   record:'📁 법정기록', ceLabel:'~ 증인 증언 ~', press:'추궁', present:'증거 제시', close:'닫기',
   hintBtn:'💡 힌트', hintAd:'📺 광고를 보면 힌트를 받아요', hintFree:'💡 힌트',
-  hintCE:(n,e)=>`💡 힌트: ${n}번째 증언에 「${e}」를 제시해 보자!`,
-  hintChoose:e=>`💡 힌트: 「${e}」를 골라 보자!`,
+  hintCE:(n,e)=>`💡 힌트: ${n}번째 증언에 「${e}」${을를(e)} 제시해 보자!`,
+  hintChoose:e=>`💡 힌트: 「${e}」${을를(e)} 골라 보자!`,
   contBtn:'📺 광고 보고 이 증언부터 이어하기', contFree:'▶ 이 증언부터 이어하기', retryEp:'↺ 이 회차 처음부터',
   adFail:'광고를 불러오지 못했어요. 잠시 뒤 다시 해 보세요.', adSkip:'광고를 끝까지 봐야 보상을 받아요.',
   toHome:'처음 화면으로', retry:'다시 도전',
