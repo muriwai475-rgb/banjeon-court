@@ -1776,12 +1776,14 @@ function setSfxMuted(m){
    - 안드로이드 앱(Capacitor)에서만 진짜 광고가 나와요.
    - 웹사이트에서는 광고 없이 바로 보상을 줘요.
    - 사용법: Ads.reward(()=>{ 보상 주기 })
-   - 광고 ID는 아래 AD_IDS 에 있어요. 지금은 구글 「테스트 광고」 ID예요.
-     AdMob 에서 내 광고 ID를 받으면 바꾸고, TESTING 을 false 로 바꾸세요. */
+   - 광고 ID: AdMob 앱 「반전법정」 → 보상형 광고 단위 「힌트」
+   - AD_TESTING 이 true 면 구글 테스트 광고가 나와요. 출시용은 false.
+     (tools/build.js 를 BJ_AD_TEST=1 로 실행하면 앱 폴더에만 true 로 바꿔 넣어요 → 내 폰 시험용) */
 const AD_IDS = {
-  reward: 'ca-app-pub-3940256099942544/5224354917'   // ← 구글 테스트용 보상형 광고 ID
+  reward: 'ca-app-pub-8634917258612465/9024279553',   // 내 보상형 광고 단위 「힌트」
+  test:   'ca-app-pub-3940256099942544/5224354917'    // 구글 테스트용
 };
-const AD_TESTING = true;   // ← 진짜 광고로 바꿀 때 false
+const AD_TESTING = false;
 
 const Ads = (() => {
   const cap = typeof window !== 'undefined' ? window.Capacitor : null;
@@ -1791,7 +1793,7 @@ const Ads = (() => {
 
   function load() {
     if (!AdMob || loading) return loading;
-    loading = AdMob.prepareRewardVideoAd({ adId: AD_IDS.reward, isTesting: AD_TESTING })
+    loading = AdMob.prepareRewardVideoAd({ adId: AD_TESTING ? AD_IDS.test : AD_IDS.reward, isTesting: AD_TESTING })
       .then(() => { ready = true; })
       .catch(() => { ready = false; })
       .finally(() => { loading = null; });
