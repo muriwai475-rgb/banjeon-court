@@ -1,5 +1,5 @@
 /* 자동 생성 파일 — tools/build.js 가 만들어요. 게임을 고치면 버전이 바뀌어 새로 받아요. */
-const CACHE = "banjeon-383a1601";
+const CACHE = "banjeon-d11bf094";
 const FILES = ["./", "index.html", "manifest.webmanifest", "privacy.html", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, { cache: "reload" }))))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });
