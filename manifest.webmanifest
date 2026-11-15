@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "반전법정: 푸른 고래 사건 파일",
+  "short_name": "반전법정",
+  "description": "증언 속 거짓을 찾아 의뢰인을 구하는 오리지널 법정 추리 게임. 전 6화 완결.",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1124",
+  "theme_color": "#0a1124",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
