@@ -22,6 +22,8 @@ html,body{height:100%;background:#0b0d14;font-family:'Noto Sans KR',sans-serif;c
 .btn{border:none;border-radius:10px;font-family:inherit;font-weight:900;cursor:pointer;color:#fff}
 #recBtn{background:#8a5a1c;padding:7px 12px;font-size:13px;border:2px solid #e0a64a}
 #langBtn{background:transparent;color:#cfd8ef;border:2px solid #3d4f80;padding:8px 18px;font-size:14px;margin-top:14px}
+#hintBtn{background:#6b5a1c;padding:7px 10px;font-size:13px;border:2px solid #e8c25a}
+#contB{background:#1f4fbf;border-color:#7aa2ff;margin-bottom:10px}
 #bgmBtn,#sfxBtn{background:#1c2540;padding:7px 10px;font-size:13px;border:2px solid #3d4f80;white-space:nowrap}
 #stage{position:relative;flex:1;overflow:hidden;transition:background .3s}
 .bg-dark{background:radial-gradient(circle at 50% 30%,#1c2340,#05060c)}
@@ -78,7 +80,7 @@ html,body{height:100%;background:#0b0d14;font-family:'Noto Sans KR',sans-serif;c
 .ev p{font-size:13px;line-height:1.5;margin-top:3px}
 .ev .btn{background:#c8102e;margin-top:8px;padding:7px 14px;font-size:13px}
 #recClose{background:#444;padding:12px;margin-top:10px;font-size:15px}
-#toast{position:absolute;top:56px;left:50%;transform:translateX(-50%);background:#e8c25a;color:#3a2a10;padding:8px 16px;border-radius:20px;font-weight:900;font-size:13px;z-index:25;display:none;white-space:nowrap}
+#toast{position:absolute;top:56px;left:50%;transform:translateX(-50%);background:#e8c25a;color:#3a2a10;padding:8px 16px;border-radius:20px;font-weight:900;font-size:13px;z-index:35;display:none;width:max-content;max-width:90%;text-align:center;word-break:keep-all}
 #title,#over{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 35%,#24346a,#06070d)}
 #title{overflow-y:auto}
 #title h1{font-family:'Black Han Sans';font-size:52px;line-height:1.05;color:#fff;-webkit-text-stroke:2px #c8102e;text-shadow:4px 4px 0 #c8102e}
@@ -108,7 +110,7 @@ html,body{height:100%;background:#0b0d14;font-family:'Noto Sans KR',sans-serif;c
 <div id="game">
   <div id="top">
     <div id="hp"></div>
-    <div style="display:flex;gap:6px"><button class="btn" id="bgmBtn">🎵 음악</button><button class="btn" id="sfxBtn" title="효과음 켜기/끄기">🔔</button><button class="btn" id="recBtn" data-t="record">📁 법정기록</button></div>
+    <div style="display:flex;gap:6px"><button class="btn" id="hintBtn" style="display:none">💡</button><button class="btn" id="bgmBtn">🎵 음악</button><button class="btn" id="sfxBtn" title="효과음 켜기/끄기">🔔</button><button class="btn" id="recBtn" data-t="record">📁 법정기록</button></div>
   </div>
   <div id="stage" class="bg-dark">
     <div class="bg-stripe"></div>
@@ -157,6 +159,7 @@ html,body{height:100%;background:#0b0d14;font-family:'Noto Sans KR',sans-serif;c
   <div id="over">
     <h1 id="overT">유죄 판결…</h1>
     <p id="overP">재판장의 신뢰를 모두 잃었다.</p>
+    <button class="btn big" id="contB" style="display:none"></button>
     <button class="btn big" id="overB">다시 도전</button>
   </div>
 </div>
@@ -186,8 +189,13 @@ const UI={
   langBtn:'🌐 English',
   music:'🎵 음악', musicOff:'🔇 음악', sfxTitle:'효과음 켜기/끄기',
   record:'📁 법정기록', ceLabel:'~ 증인 증언 ~', press:'추궁', present:'증거 제시', close:'닫기',
+  hintBtn:'💡 힌트', hintAd:'📺 광고를 보면 힌트를 받아요', hintFree:'💡 힌트',
+  hintCE:(n,e)=>`💡 힌트: ${n}번째 증언에 「${e}」를 제시해 보자!`,
+  hintChoose:e=>`💡 힌트: 「${e}」를 골라 보자!`,
+  contBtn:'📺 광고 보고 이 증언부터 이어하기', contFree:'▶ 이 증언부터 이어하기', retryEp:'↺ 이 회차 처음부터',
+  adFail:'광고를 불러오지 못했어요. 잠시 뒤 다시 해 보세요.', adSkip:'광고를 끝까지 봐야 보상을 받아요.',
   toHome:'처음 화면으로', retry:'다시 도전',
-  guiltyT:'유죄 판결…', guiltyP:'재판장의 신뢰를 모두 잃었다.<br>마지막 증언부터 다시 도전!',
+  guiltyT:'유죄 판결…', guiltyP:'재판장의 신뢰를 모두 잃었다.',
   winT:'무죄 판결!', winP:hp=>`축하합니다! 진범을 밝혀냈어요.<br>남은 신뢰도: ${hp}`,
   nextEp:n=>`▶ 제${n}화 시작`,
   evAdded:n=>`📁 법정기록에 증거 ${n}개가 추가됐다!`,
@@ -205,6 +213,11 @@ const UI={
   langBtn:'🌐 한국어',
   music:'🎵 Music', musicOff:'🔇 Music', sfxTitle:'Sound effects on/off',
   record:'📁 Court Record', ceLabel:'~ Testimony ~', press:'Press', present:'Present', close:'Close',
+  hintBtn:'💡 Hint', hintAd:'📺 Watch an ad to get a hint', hintFree:'💡 Hint',
+  hintCE:(n,e)=>`💡 Hint: present "${e}" at statement ${n}!`,
+  hintChoose:e=>`💡 Hint: pick "${e}"!`,
+  contBtn:'📺 Watch an ad to continue from here', contFree:'▶ Continue from here', retryEp:'↺ Restart this episode',
+  adFail:'Could not load an ad. Please try again in a moment.', adSkip:'Watch the whole ad to get the reward.',
   toHome:'Back to title', retry:'Try again',
   guiltyT:'GUILTY…', guiltyP:'You lost all of the Judge\'s trust.<br>Try again from the last testimony!',
   winT:'NOT GUILTY!', winP:hp=>`Congratulations! You found the real culprit.<br>Trust left: ${hp}`,
@@ -1670,7 +1683,7 @@ const BGM=(()=>{
   function setMuted(m){ muted=m; try{ localStorage.setItem('bgmMute',m?'1':'0'); }catch(e){} if(master) master.gain.value=m?0:0.09; drawBtn(); }
   function drawBtn(){ const b=document.getElementById('bgmBtn'); if(b) b.textContent=muted?T('musicOff'):T('music'); }
   const b=document.getElementById('bgmBtn'); if(b){ b.onclick=()=>setMuted(!muted); drawBtn(); }
-  return {play,stop:()=>{want=null;stop();},setMuted,get now(){return want;}};
+  return {play,pause:()=>{ if(ctx&&ctx.state==='running') ctx.suspend(); },resume:()=>{ if(ctx&&ctx.state==='suspended') ctx.resume(); },stop:()=>{want=null;stop();},setMuted,get now(){return want;}};
 })();
 
 </script>
@@ -1757,6 +1770,78 @@ function setSfxMuted(m){
 
 </script>
 <script>
+/* ---------- 보상형 광고 (AdMob) ----------
+   - 안드로이드 앱(Capacitor)에서만 진짜 광고가 나와요.
+   - 웹사이트에서는 광고 없이 바로 보상을 줘요.
+   - 사용법: Ads.reward(()=>{ 보상 주기 })
+   - 광고 ID는 아래 AD_IDS 에 있어요. 지금은 구글 「테스트 광고」 ID예요.
+     AdMob 에서 내 광고 ID를 받으면 바꾸고, TESTING 을 false 로 바꾸세요. */
+const AD_IDS = {
+  reward: 'ca-app-pub-3940256099942544/5224354917'   // ← 구글 테스트용 보상형 광고 ID
+};
+const AD_TESTING = true;   // ← 진짜 광고로 바꿀 때 false
+
+const Ads = (() => {
+  const cap = typeof window !== 'undefined' ? window.Capacitor : null;
+  const native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+  const AdMob = native && cap.Plugins && cap.Plugins.AdMob;
+  let ready = false, loading = null, busy = false;
+
+  function load() {
+    if (!AdMob || loading) return loading;
+    loading = AdMob.prepareRewardVideoAd({ adId: AD_IDS.reward, isTesting: AD_TESTING })
+      .then(() => { ready = true; })
+      .catch(() => { ready = false; })
+      .finally(() => { loading = null; });
+    return loading;
+  }
+
+  async function init() {
+    if (!AdMob) return;
+    try {
+      await AdMob.initialize({ initializeForTesting: AD_TESTING });
+      /* 유럽 등에서 필요한 「광고 동의」 창 (필요한 나라에서만 떠요) */
+      try {
+        const info = await AdMob.requestConsentInfo();
+        if (info && info.isConsentFormAvailable && info.status === 'REQUIRED') await AdMob.showConsentForm();
+      } catch (e) {}
+      load();
+    } catch (e) {}
+  }
+
+  /* 광고를 끝까지 보면 ok() 실행 */
+  async function reward(ok) {
+    if (!AdMob) { ok(); return; }          // 웹사이트: 광고 없이 바로 보상
+    if (busy) return; busy = true;
+    try {
+      if (!ready) { toast('📺 …', 'select'); await load(); }
+      if (!ready) { toast(T('adFail'), 'wrong'); return; }
+      /* 광고가 닫히거나 실패하면 끝. 끝까지 봤을 때만 「보상」 신호가 와요 */
+      let got = false;
+      const hs = [];
+      let res;
+      const done = new Promise(r => { res = r;
+        AdMob.addListener('onRewardedVideoAdReward', () => { got = true; }).then(h => hs.push(h));
+        AdMob.addListener('onRewardedVideoAdDismissed', res).then(h => hs.push(h));
+        AdMob.addListener('onRewardedVideoAdFailedToShow', res).then(h => hs.push(h));
+      });
+      BGM.pause(); ready = false;
+      AdMob.showRewardVideoAd().then(() => { got = true; }).catch(() => res());
+      await done;
+      hs.forEach(h => h.remove());
+      BGM.resume();
+      setTimeout(() => { if (got) ok(); else toast(T('adSkip'), 'wrong'); }, 300);
+    } finally {
+      busy = false; load();                // 다음 광고 미리 준비
+    }
+  }
+
+  init();
+  return { reward, get native() { return native; } };
+})();
+
+</script>
+<script>
 /* ---------- 엔진 ---------- */
 const $=id=>document.getElementById(id);
 const S={hp:5,ev:[],mode:'talk',list:[],i:0,after:null,typing:false,full:''};
@@ -1792,7 +1877,7 @@ function fx(text,cls,cb){
   f.style.display='flex'; const sp=f.querySelector('span'); sp.style.animation='none'; void sp.offsetWidth; sp.style.animation='';
   snd({'이의 있음!':'objection','잠깐!':'hold','받아라!':'take','무죄':'gavel','Objection!':'objection','Wait!':'hold',"Here's proof!":'take','NOT GUILTY':'gavel'}[text]||'boom'); shake(); setTimeout(()=>{f.style.display='none';cb()},1200);
 }
-function run(list,after){ S.list=list; S.i=0; S.after=after||null; S.mode='talk'; $('ce').style.display='none'; $('ceLabel').style.display='none'; next(); }
+function run(list,after){ S.list=list; S.i=0; S.after=after||null; S.mode='talk'; hintVis(); $('ce').style.display='none'; $('ceLabel').style.display='none'; next(); }
 function play(name){ run(SC[name]); }
 function next(){
   const st=S.list[S.i++];
@@ -1810,7 +1895,7 @@ function next(){
 /* 심문 */
 function startCE(id){ BGM.play('ce'); S.ce=CE[id]; S.ci=0; S.mode='ce'; stmt(); }
 function stmt(){
-  S.mode='ce'; const ce=S.ce, s=ce.st[S.ci];
+  S.mode='ce'; hintVis(); const ce=S.ce, s=ce.st[S.ci];
   $('ce').style.display='flex'; $('ceLabel').style.display='block';
   $('ceLabel').textContent=`${ce.title}  ${S.ci+1}/${ce.st.length}`;
   show({s:ce.w,f:'normal',t:s.t,cls:'stmt'});
@@ -1835,16 +1920,32 @@ function presented(id){
   }
 }
 function startChoose(st){
-  BGM.play('pursuit'); S.mode='choose'; S.choose=st; $('ce').style.display='none'; $('ceLabel').style.display='none';
+  BGM.play('pursuit'); S.mode='choose'; S.choose=st; hintVis(); $('ce').style.display='none'; $('ceLabel').style.display='none';
   show({s:'nar',t:'▶ '+st.prompt+'\n'+T('openHint'),cls:'think'});
   setTimeout(()=>openRec(true),600);
 }
+
+/* 힌트 (앱에서는 보상형 광고를 보고 받아요 — js/ads.js) */
+function hintVis(){ $('hintBtn').style.display=(S.mode==='ce'||S.mode==='choose')?'':'none'; }
+function hintText(){
+  if(S.mode==='ce') return T('hintCE',S.ce.ans.st[0]+1,EV[S.ce.ans.ev].n);
+  if(S.mode==='choose') return T('hintChoose',EV[S.choose.choose].n);
+}
+function hintKey(){ return S.mode==='ce'?'ce:'+S.ce.title:S.mode==='choose'?'ch:'+S.choose.choose:''; }
+function showHint(){ const t=$('toast'); toast(hintText(),'ding'); clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none',4500); S.hinted=hintKey(); }
+$('hintBtn').onclick=()=>{
+  if(S.mode!=='ce'&&S.mode!=='choose') return;
+  if(S.typing) finish();
+  if(S.hinted===hintKey()) return showHint();          // 이미 본 힌트는 다시 무료
+  if(Ads.native) toast(T('hintAd'),'select');
+  const k=hintKey(); Ads.reward(()=>{ if(hintKey()===k) showHint(); });
+};
 
 /* 법정기록 */
 function openRec(present){
   snd('open');
   S.presenting=present;
-  $('recHint').textContent=present?(S.mode==='choose'?S.choose.prompt:T('pickHint')):'';
+  $('recHint').textContent=present?(S.hinted===hintKey()?hintText():S.mode==='choose'?S.choose.prompt:T('pickHint')):'';
   $('recList').innerHTML=S.ev.map(id=>{const e=EV[id];return `<div class="ev"><div class="ic">${e.ic}</div><div><h3>${e.n}</h3><p>${e.d}</p>${present?`<button class="btn" data-id="${id}">${T('presentThis')}</button>`:''}</div></div>`}).join('')||'<p>'+T('noEv')+'</p>';
   $('rec').style.display='flex';
 }
@@ -1862,7 +1963,8 @@ function ending(win){
   const o=$('over'); o.className=win?'win':''; o.style.display='flex';
   $('overT').textContent=win?T('winT'):T('guiltyT');
   $('overP').innerHTML=win?T('winP','🟩'.repeat(S.hp)+'⬛'.repeat(5-S.hp)):T('guiltyP');
-  $('overB').textContent=win?(S.ep<EPS.length?T('nextEp',S.ep+1):T('toHome')):T('retry');
+  $('overB').textContent=win?(S.ep<EPS.length?T('nextEp',S.ep+1):T('toHome')):T('retryEp');
+  $('contB').style.display=win?'none':''; $('contB').textContent=Ads.native?T('contBtn'):T('contFree');
   S.won=win;
 }
 
@@ -1892,13 +1994,15 @@ $('credBtn').onclick=()=>{ snd('select'); BGM.play('title'); $('credits').style.
 $('overB').onclick=()=>{
   snd('select');
   $('over').style.display='none'; S.hp=5; drawHP();
-  if(S.won){ if(S.ep<EPS.length) startEp(S.ep+1); else { BGM.play('title'); $('title').style.display='flex'; } } else S.check();
+  if(S.won){ if(S.ep<EPS.length) startEp(S.ep+1); else { BGM.play('title'); $('title').style.display='flex'; } } else startEp(S.ep);
 };
+/* 유죄일 때: 광고를 보면 마지막 증언부터 이어하기 */
+$('contB').onclick=()=>{ snd('select'); Ads.reward(()=>{ $('over').style.display='none'; S.hp=5; drawHP(); S.check(); }); };
 drawHP();
 BGM.play('title');
 
 </script>
 <script>/* 앱으로 설치됐을 때 인터넷 없이도 돌아가게 (app 폴더에서만 동작) */
-if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+if('serviceWorker' in navigator && location.protocol.startsWith('http') && !window.Capacitor) navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
 </body>
 </html>
