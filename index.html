@@ -64,9 +64,9 @@ html,body{height:100%;background:#0b0d14;font-family:'Noto Sans KR',sans-serif;c
 .press{background:#2d55a5;border:2px solid #7aa2ff}
 .present{background:#c8102e;border:2px solid #ff7a8a}
 #fx{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:20;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.15),rgba(0,0,0,.6))}
-#fx span{font-family:'Black Han Sans',sans-serif;font-size:64px;color:#fff;-webkit-text-stroke:3px #c8102e;text-shadow:5px 5px 0 #c8102e,0 0 30px #ff0;transform:rotate(-8deg);animation:boom .35s cubic-bezier(.2,2,.4,1)}
+#fx span{font-family:'Black Han Sans',sans-serif;font-size:min(64px,12.5vw);white-space:nowrap;color:#fff;-webkit-text-stroke:3px #c8102e;text-shadow:5px 5px 0 #c8102e,0 0 30px #ff0;transform:rotate(-8deg);animation:boom .35s cubic-bezier(.2,2,.4,1)}
 #fx.blue span{-webkit-text-stroke-color:#1f4fbf;text-shadow:5px 5px 0 #1f4fbf,0 0 30px #0ff}
-#fx.gold span{-webkit-text-stroke-color:#b8862e;text-shadow:5px 5px 0 #b8862e,0 0 40px #ff0;font-size:80px}
+#fx.gold span{-webkit-text-stroke-color:#b8862e;text-shadow:5px 5px 0 #b8862e,0 0 40px #ff0;font-size:min(80px,14vw)}
 @keyframes boom{from{transform:rotate(-8deg) scale(3);opacity:0}to{transform:rotate(-8deg) scale(1);opacity:1}}
 .shake{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-10px,4px)}40%{transform:translate(9px,-5px)}60%{transform:translate(-6px,3px)}80%{transform:translate(5px,-2px)}}
@@ -82,7 +82,7 @@ html,body{height:100%;background:#0b0d14;font-family:'Noto Sans KR',sans-serif;c
 #recClose{background:#444;padding:12px;margin-top:10px;font-size:15px}
 #toast{position:absolute;top:56px;left:50%;transform:translateX(-50%);background:#e8c25a;color:#3a2a10;padding:8px 16px;border-radius:20px;font-weight:900;font-size:13px;z-index:35;display:none;width:max-content;max-width:90%;text-align:center;word-break:keep-all}
 #title,#over{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 35%,#24346a,#06070d)}
-#title{overflow-y:auto}
+#title{overflow-y:auto;justify-content:safe center}
 #title h1{font-family:'Black Han Sans';font-size:52px;line-height:1.05;color:#fff;-webkit-text-stroke:2px #c8102e;text-shadow:4px 4px 0 #c8102e}
 #title h2{margin:14px 0 6px;font-size:18px;color:#e8c25a}
 #title p,#over p{color:#aab;font-size:14px;line-height:1.7;margin:10px 0 26px}
@@ -104,6 +104,14 @@ html,body{height:100%;background:#0b0d14;font-family:'Noto Sans KR',sans-serif;c
 .cr div{text-align:left;width:150px}.cr b{display:block;font-size:20px}.cr span{color:#9ab;font-size:13px}
 #over h1{font-family:'Black Han Sans';font-size:44px;color:#ff5a6a}
 #over.win h1{color:#5dff8a}
+
+/* 좁은 화면(폭 420px 이하): 위쪽 버튼·신뢰도 막대를 작게 해서 한 줄에 들어가게 */
+#top .btn{white-space:nowrap}
+@media (max-width:420px){
+  #hp{gap:3px} #hp i{width:15px;height:11px}
+  #top .btn{font-size:12px;padding:6px 7px}
+  #top>div:last-child{gap:4px!important}
+}
 </style>
 </head>
 <body>
